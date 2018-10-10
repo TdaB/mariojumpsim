@@ -16,6 +16,6 @@ java -jar ./build/libs/mariojumpsim.jar
 A new window will be created and you will gain control of the "player"
 
 ## Controls
-Left arrow -> move left
-Right arrow -> move right
-Space bar -> jump
+Left arrow = move left
+Right arrow = move right
+Space bar = jump
