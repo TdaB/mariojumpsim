@@ -11,11 +11,11 @@ import javax.swing.*;    // Using Swing's components and containers
 
 
 public class Simulator extends JFrame {
-    public static final int CANVAS_WIDTH  = 1000;
-    public static final int CANVAS_HEIGHT = 800;
-    public static final int GROUND_HEIGHT = 700;
-    public static final int PLAYER_WIDTH = 25;
-    public static final int PLAYER_HEIGHT = 25;
+    private static final int CANVAS_WIDTH  = 1000;
+    private static final int CANVAS_HEIGHT = 800;
+    private static final int GROUND_HEIGHT = 700;
+    private static final int PLAYER_WIDTH = 25;
+    private static final int PLAYER_HEIGHT = 25;
 
     private static final double ACCEL_X = 2000;
     private static final double DECEL_X = 3000;
