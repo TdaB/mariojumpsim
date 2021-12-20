@@ -1,23 +1,25 @@
-# mariojumpsim
+# Mario Jump Simulator
 
-**Description:** A simple interactive graphics program to emulate the feel of 2D platforming games.
+A simple interactive graphics program to emulate the feel of 2D platforming games.
+
+![Alt text](screenshots/mariojumpsim.gif?raw=true)
+
+## Requirements
+- Java 8+
 
 ## How to Build
-Navigate to project directory and run:
 ```
 gradle clean build
 ```
-This will create a jar at `./build/libs/mariojumpsim.jar`
 
 ## How to Run
 ```
-java -jar ./build/libs/mariojumpsim.jar
+gradle run
 ```
-A new window will be created and you will gain control of the "player"
 
 ## Controls
-Left arrow -> move left
+Left arrow = move left
 
-Right arrow -> move right
+Right arrow = move right
 
-Space bar -> jump
+Space bar = jump

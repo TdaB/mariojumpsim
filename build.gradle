@@ -1,8 +1,7 @@
-apply plugin: 'idea'
-apply plugin: 'java'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+plugins {
+    id 'idea'
+    id 'application'
+}
 
 repositories {
     mavenCentral()
@@ -14,16 +13,12 @@ configurations.all {
     }
 }
 
-dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+application {
+    mainClassName = 'mariojumpsim.Simulator'
 }
 
-jar {
-    zip64 true
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    manifest {
-        attributes 'Main-Class': 'mariojumpsim.Simulator'
-    }
-    exclude 'META-INF/.RSA', 'META-INF/.SF', 'META-INF*//*.DSA'
+dependencies {
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.32'
+    implementation 'com.typesafe:config:1.4.1'
 }

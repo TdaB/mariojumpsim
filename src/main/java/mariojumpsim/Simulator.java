@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
@@ -24,20 +23,21 @@ public class Simulator extends JFrame {
     private static final double ACCEL_X = 2000;
     private static final double DECEL_X = 3000;
     private static final double ACCEL_Y = 8000;
-    private static final double MAX_VELOCITY_X = 1000;
-    private static final double MAX_VELOCITY_Y = 10000;
+    private static final double VELOCITY_MAX_X = 1000;
+    private static final double VELOCITY_MAX_Y = 10000;
     private static final double JUMP_VELOCITY = 3000;
+    private static final double ZERO_ERROR = .001;
     private double velX = 0;
     private double velY = 0;
-    private double playerX = CANVAS_WIDTH / 2;
-    private double playerY = CANVAS_HEIGHT / 2;
+    private double playerX = .5 * CANVAS_WIDTH;
+    private double playerY = .5 * CANVAS_HEIGHT;
 
     private long startTime;
     private long lastUpdateTime;
     private long frames = 0;
 
     private static final Logger log = LoggerFactory.getLogger(Simulator.class);
-    private KeyListener keyListener = new KeyListener();
+    private final KeyListener keyListener = new KeyListener();
 
     // Set up the GUI components and event handlers
     public Simulator() {
@@ -48,13 +48,11 @@ public class Simulator extends JFrame {
 
         DrawCanvas canvas = new DrawCanvas();
         canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
-        // Set the Drawing JPanel as the JFrame's content-pane
-        Container cp = getContentPane();
-        cp.add(canvas);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);   // Handle the CLOSE button
-        pack();              // Either pack() the components; or setSize()
-        setTitle("T da B's Amazing Simulator");  // "super" JFrame sets the title
-        setVisible(true);    // "super" JFrame show
+        getContentPane().add(canvas);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        pack();
+        setTitle("Incredible Mario Simulator");
+        setVisible(true);
     }
 
     public void updatePlayer() {
@@ -80,20 +78,22 @@ public class Simulator extends JFrame {
         boolean rightPressed = this.keyListener.isRightPressed();
 
         if (leftPressed && !rightPressed) {
-            double updatedVelX = Physics.updateVelocity(this.velX, -1.0 * ACCEL_X, elapsed, MAX_VELOCITY_X);
+            double updatedVelX = Physics.updateVelocity(this.velX, -1.0 * ACCEL_X, elapsed, VELOCITY_MAX_X);
             this.playerX += Physics.distance(this.velX, updatedVelX, elapsed);
             this.velX = updatedVelX;
         } else if (rightPressed && !leftPressed) {
-            double updatedVelX = Physics.updateVelocity(this.velX, ACCEL_X, elapsed, MAX_VELOCITY_X);
+            double updatedVelX = Physics.updateVelocity(this.velX, ACCEL_X, elapsed, VELOCITY_MAX_X);
             this.playerX += Physics.distance(this.velX, updatedVelX, elapsed);
             this.velX = updatedVelX;
         }  else {
-            if (this.velX < 0) {
-                double updatedVelX = Physics.updateVelocity(this.velX, DECEL_X, elapsed, MAX_VELOCITY_X);
+            if (Math.abs(this.velX) < ZERO_ERROR) {
+                return;
+            } else if (this.velX < 0) {
+                double updatedVelX = Physics.updateVelocity(this.velX, DECEL_X, elapsed, VELOCITY_MAX_X);
                 this.playerX += Physics.distance(this.velX, updatedVelX, elapsed);
                 this.velX = updatedVelX;
             } else {
-                double updatedVelX = Physics.updateVelocity(this.velX, -1.0 * DECEL_X, elapsed, MAX_VELOCITY_X);
+                double updatedVelX = Physics.updateVelocity(this.velX, -1.0 * DECEL_X, elapsed, VELOCITY_MAX_X);
                 this.playerX += Physics.distance(this.velX, updatedVelX, elapsed);
                 this.velX = updatedVelX;
             }
@@ -110,7 +110,7 @@ public class Simulator extends JFrame {
         } else {
             if (this.playerY < GROUND_HEIGHT) {
                 // Decel Y
-                double updatedVelY = Physics.updateVelocity(this.velY, ACCEL_Y, elapsed, MAX_VELOCITY_Y);
+                double updatedVelY = Physics.updateVelocity(this.velY, ACCEL_Y, elapsed, VELOCITY_MAX_Y);
                 this.playerY += Physics.distance(this.velY, updatedVelY, elapsed);
                 if (this.playerY >= GROUND_HEIGHT) {
                     this.playerY = GROUND_HEIGHT;
@@ -125,17 +125,20 @@ public class Simulator extends JFrame {
     private class DrawCanvas extends JPanel {
         @Override
         public void paintComponent(Graphics g) {
-            setBackground(Color.BLACK);
+            super.paintComponent(g);
             // Draw ground
-            g.setColor(Color.WHITE);
-            g.drawLine(0, GROUND_HEIGHT, CANVAS_WIDTH - 1, GROUND_HEIGHT);
+            g.setColor(new Color(92, 64, 51));
+            //g.drawLine(0, GROUND_HEIGHT, CANVAS_WIDTH - 1, GROUND_HEIGHT);
+            g.fillRect(0, GROUND_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT - GROUND_HEIGHT);
             // Draw player
             g.setColor(Color.RED);
             g.fillRect((int) playerX - (PLAYER_WIDTH / 2), (int) playerY - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT);
 
+            setBackground(new Color(49, 200, 248));
+
             updatePlayer();
 
-            this.repaint();
+            repaint();
         }
     }
 
